@@ -14,29 +14,103 @@ https://love2d.org/forums/viewtopic.php?f=5&t=38486&hilit=sqlite3
 ]]
 
 local tSettings = {
-	SQLite3Path = "plugins/sqlite3", --Edit	to suit your project: this is case-sensitive on linux!
-	SystemType = "Windows", --Edit to suit your project
-	SystemBits = "64", --Edit to suit your project
-	--<<<< DO NOT EDIT BELOW THIS LINE >>>> <<<< DO NOT EDIT BELOW THIS LINE >>>> <<<< DO NOT EDIT BELOW THIS LINE >>>> 
+	SQLite3Path = love.filesystem.getRealDirectory("plugins/sqlite3/sqlite3.lua"), --Edit to suit your project:
+	--Notes | (1) This is usually case-sensitive on non-Windows machines. (2) This MUST be an absolute (not relative) path.
+	
+	--<<<< DO NOT EDIT BELOW THIS LINE >>>>
+	SystemType = "Not Configured",
+	SystemBits = "32",
 	SystemPaths = { 
 		linux = {
-			["32"] = "dll/linux_x86/lsqlite3",
-			["64"] = "dll/linux_x64/lsqlite3",
+			["32"] = "dll/linux_x86",
+			["64"] = "dll/linux_x64",
 		},
 		windows = {
-			["32"] = "dll/win_x86/lsqlite3",
-			["64"] = "dll/win_x86_64/lsqlite3",
+			["32"] = "dll/win_x86",
+			["64"] = "dll/win_x86_64",
 		},
 		mac = {
-			["32"] = "dll/osx_x86+x86_64/lsqlite3",
-			["64"] = "dll/osx_x86+x86_64/lsqlite3",
+			["32"] = "dll/osx_x86+x86_64",
+			["64"] = "dll/osx_x86+x86_64",
 		},
 	},
 };
 
+--a pretty error message header
 local function SQLite3Error(sError)
 error("SQLite3 init error: "..sError);
 end
+
+--check for the debug library
+if not debug then
+SQLite3Error("The 'debug' library is required in order for slqite3 to work. Please use a version of lua that contains that library.");
+end
+
+--check for io
+if not io then
+SQLite3Error("The 'io' library is required in order for slqite3 to work. Please use a version of lua that contains that library.");
+end
+
+--check for io.popen
+if not io.popen then
+SQLite3Error("The 'io.popen' function is required in order for slqite3 to work. Please use a version of lua that contains that function.");
+end
+
+--determines the OS type and bit interface
+local function getOSInfo()
+	
+	local hCommand = io.popen("ver");
+	local sCommand = hCommand:read("*a");
+	
+	--test for windows
+	local hCommand = io.popen("ver");
+	local sCommand = hCommand:read("*a");
+		
+	if sCommand:lower():find("windows") then
+	tSettings.SystemType = "windows";
+		
+		--test for 64 bit interface
+		hCommand = io.popen("echo %PROCESSOR_ARCHITECTURE%");
+		sCommand = hCommand:read("*a");
+		
+		if sCommand:lower():find("64") then		
+		tSettings.SystemBits = "64";		
+		end
+		
+	return
+	end
+
+	--test for linux
+	hCommand = io.popen("uname");
+	sCommand = hCommand:read("*a");
+		
+	if sCommand:lower():find("linux") then
+	tSettings.SystemType = "linux";
+		
+		--test for 64 bit interface
+		hCommand = io.popen("uname -m");
+		sCommand = hCommand:read("*a");
+		
+		if sCommand:lower():find("64") then
+		tSettings.SystemBits = "64";
+		end
+		
+	return
+	end
+
+	--test for mac
+	hCommand = io.popen("sw_vers -productVersion");
+	sCommand = hCommand:read("*a");
+		
+	if sCommand:lower():find("mac") then
+	tSettings.SystemType = "mac";
+	return
+	end
+	
+end
+
+--get and store the OS type and bit interface
+getOSInfo();
 
 --check the user path
 if not type(tSettings.SystemType) == "string" then
@@ -70,7 +144,7 @@ end
 	
 --make sure the OS type is recognized
 if not tSettings.SystemPaths[tSettings.SystemType] then
-SQLite3Error("Operating System Type '"..tSettings.SystemType.."'".." not recognized or supported. Supported types are 'Linux', 'Mac' and 'Windows'.");
+SQLite3Error("Operating System Type '"..tSettings.SystemType.."'".." not recognized or supported. Supported types are 'Linux', 'OS X' and 'Windows'.");
 end
 
 --make sure the bit level is supported
@@ -79,11 +153,35 @@ error("Operating System Bit Level '"..tSettings.SystemBits.."'".." not recognize
 end
 
 --get the path to the file to be required
-local sPath = love.filesystem.getRealDirectory(tSettings.SQLite3Path.."/sqlite3.lua").."/"..tSettings.SQLite3Path;
+local sPath = tSettings.SQLite3Path.."/"..debug.getinfo(1, "S").source:gsub("sqlite3.lua", ""):gsub("@", "");
 sPath = sPath.."/"..tSettings.SystemPaths[tSettings.SystemType][tSettings.SystemBits];
+	
+	--replace the directory separator and library type if this is a windows machine
+	local sDirectorySeparator = package.config:sub(1,1);
+	local sLibraryExtension = "so";
+	
+	if tSettings.SystemType == "windows" then
+	sPath = sPath:gsub("/", sDirectorySeparator);
+	sLibraryExtension = "dll";
+	end
+		
+	--ensure that the path begins with "/" if this is a linux system
+	if tSettings.SystemType == "linux" then
+	sPath = "/"..sPath;	
+	end
 
---add that path the package.path
-package.path = package.path .. ";"..sPath;
+	--purge any double separators
+	sPath = sPath:gsub("\\\\", "\\");
+	sPath = sPath:gsub("//", "/");
+	
+--check for the ';' at the end of package.cpath
+local sCPathSeparator = ";";
+if package.cpath:sub(package.cpath:len()) == ";" then
+sCPathSeparator = "";
+end
+
+--add that path the package.cpath
+package.cpath = package.cpath..sCPathSeparator..sPath..sDirectorySeparator.."?."..sLibraryExtension..";";
 
 --require the dll/so
 sqlite3 = require("lsqlite3");
