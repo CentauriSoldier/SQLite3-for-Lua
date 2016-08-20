@@ -2,10 +2,9 @@
 An SQLite3 Library for Lua
 
 ##Installation and Setup
-Copy the **sqlite3** folder and all its contents to your project.
+- Copy the **sqlite3** folder and all its contents to your project.
 
-Edit the **sqlite3.lua** file and set the following variable in the **tSettings** table to folderdirectory contianing this plugin:
-- SQLite3Path
+- Edit the **sqlite3.lua** file and set the *SQLite3Path* variable in the **tSettings** table to folderdirectory contianing this plugin.
 
 *Note*: this path must be an absolute path on the system such as "C:\\MyPath\\MyProject\\plugins".
 There are various ways to do this depending on what system is being used. For example, if using LOVE and placing the plugin in directory named 'plugins', you can simply type **love.filesystem.getRealDirectory("plugins/sqlite3/sqlite3.lua")**.
