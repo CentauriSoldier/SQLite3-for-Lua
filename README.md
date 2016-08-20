@@ -10,11 +10,11 @@ An SQLite3 Library for Lua
 There are various ways to do this depending on what system is being used. For example, if using LOVE and placing the plugin in directory named 'plugins', you can simply type **love.filesystem.getRealDirectory("plugins/sqlite3/sqlite3.lua")**.
 
 - Require the scipt file.
-
+```lua
 require('pathtoyourscripts.sqlite3.sqlite3');
-
+```
 ##Usage Example
-  
+```lua  
     --create/open database
     local hDB = sqlite3.open("mydatabase.db");
 
@@ -24,7 +24,7 @@ require('pathtoyourscripts.sqlite3.sqlite3');
       
       hDB:close();
       end
-
+```
 ##Documentation
 https://www.sqlite.org/
 
