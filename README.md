@@ -13,6 +13,18 @@ There are various ways to do this depending on what system is being used. For ex
 
 require('pathtoyourscripts.sqlite3.sqlite3');
 
+##Usage Example
+  
+    --create/open database
+    local hDB = sqlite3.open("mydatabase.db");
+
+      if hDB then
+      local sQuery = "CREATE TABLE test (id INTEGER PRIMARY KEY   AUTOINCREMENT, name CHAR(20));";
+      hDB:execute(sQuery);
+      
+      hDB:close();
+      end
+
 ##Documentation
 https://www.sqlite.org/
 
