@@ -1,13 +1,11 @@
-# SQLite3-LOVE
-An SQLite3 Library for LOVE
+# SQLite3 for Lua
+An SQLite3 Library for Lua
 
 ##Installation and Setup
 Copy the sqlite3 folder to your project.
 
-Edit the **sqlite3.lua** file and set the following variables to match your system:
+Edit the **sqlite3.lua** file and set the following variable in the **tSettings** table:
 - SQLite3Path
-- SystemType
-- SystemBits
 
 ##Documentation
 https://www.sqlite.org/
