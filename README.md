@@ -6,9 +6,12 @@ Copy the sqlite3 folder to your project.
 
 Edit the **sqlite3.lua** file and set the following variable in the **tSettings** table to folderdirectory contianing this plugin:
 - SQLite3Path
-*Note*: this path must be an absolute path on the system such as "C:\\MyPath\\MyProject\\plugins". There are various ways to do this depending on what system is being used. For example, if using LOVE and placing the plugin in directory named 'plugins', you can simply type **love.filesystem.getRealDirectory("plugins/sqlite3/sqlite3.lua")**.
 
-Require the scipt file
+*Note*: this path must be an absolute path on the system such as "C:\\MyPath\\MyProject\\plugins".
+There are various ways to do this depending on what system is being used. For example, if using LOVE and placing the plugin in directory named 'plugins', you can simply type **love.filesystem.getRealDirectory("plugins/sqlite3/sqlite3.lua")**.
+
+- Require the scipt file.
+
 require('pathtoyourscripts.sqlite3.sqlite3');
 
 ##Documentation
