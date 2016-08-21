@@ -8,7 +8,7 @@ An SQLite3 Library for Lua
 
 *Note*: this path **must** be an absolute path on the system such as "C:\\Users\\\<USERNAME\>\\AppData\\Roaming\\MyProject" and the application **must** have write access to it. The user data folder is usually a good place for the Sqlite3 plugin to write the library file.
 
-There are various ways to do this depending on what system is being used. For example, if you're using LOVE and placing the **sqlite3.lua** file in directory named 'plugins', you can simply type **love.filesystem.getSaveDirectory()**.
+There are various ways to do this depending on what system is being used. For example, if you're using [LÖVE](https://love2d.org/), you can simply type **love.filesystem.getSaveDirectory()**.
 
 - Require the scipt file.
 ```lua
