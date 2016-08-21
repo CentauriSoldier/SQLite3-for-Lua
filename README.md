@@ -2,7 +2,7 @@
 An SQLite3 Library for Lua
 
 ##Installation and Setup
-- Download [**sqlite3.lua**](https://github.com/CentauriSoldier/SQLite3-for-Lua/raw/master/sqlite3.lua)
+- Download **sqlite3.lua**.
 
 - Copy the **sqlite3.lua** file to your project.
 
