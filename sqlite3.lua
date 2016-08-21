@@ -30,9 +30,9 @@ local tLibs = {
 
 
 local tSettings = {
-	SQLite3Path = love.filesystem.getRealDirectory("plugins/sqlite3/sqlite3.lua"), --Edit to suit your project:
+	SQLite3Path = love.filesystem.getSaveDirectory(),--love.filesystem.getRealDirectory("plugins/sqlite3/sqlite3.lua"), --Edit to suit your project:
 	--Notes | (1) This is usually case-sensitive on non-Windows machines. (2) This MUST be an absolute (not relative) path.
-	
+	--		 The application MUST have write permission to the folder.
 	--<<<< DO NOT EDIT BELOW THIS LINE >>>>	
 	SystemType = "Not Configured",
 	SystemBits = "32",
@@ -145,11 +145,6 @@ local function init()
 --get the base64 function needed to write the required library file
 local base64 = __ee5_base64();
 
-	--check for the debug library
-	if not debug then
-	SQLite3Error("The 'debug' library is required in order for slqite3 to work. Please use a version of lua that contains that library.");
-	end
-
 	--check for io
 	if not io then
 	SQLite3Error("The 'io' library is required in order for slqite3 to work. Please use a version of lua that contains that library.");
@@ -203,9 +198,9 @@ local base64 = __ee5_base64();
 	error("Operating System Bit Level '"..tSettings.SystemBits.."'".." not recognized or supported for System Type '"..tSettings.SystemType.."'. Supported bit levels are '32' and '64'.");
 	end
 
-	--get the path to the file to be required
-	local sPath = tSettings.SQLite3Path.."/"..debug.getinfo(1, "S").source:gsub("sqlite3.lua", ""):gsub("@", "");
-	sPath = sPath.."/"..tSettings.SystemPaths[tSettings.SystemType][tSettings.SystemBits];
+	--get and operate on the output path
+	local sPath = tSettings.SQLite3Path--.."/"..debug.getinfo(1, "S").source:gsub("sqlite3.lua", ""):gsub("@", "");
+	sPath = sPath.."/"--..tSettings.SystemPaths[tSettings.SystemType][tSettings.SystemBits];
 	
 	--replace the directory separator and library type if this is a windows machine
 	local sDirectorySeparator = package.config:sub(1,1);
@@ -231,39 +226,24 @@ local base64 = __ee5_base64();
 	sCPathSeparator = "";
 	end
 
---check to see if love is archived or compiled
-local bIsArchived = false;
-local bIsCompiled = false;
-local sSearchString = "";
+	--concat the complete library path
+	local pLib = sPath..sDirectorySeparator.."lsqlite3."..sLibraryExtension
+	local bLibExists = false;
+	local hLibTest = io.open(pLib, "r+");
 	
-	if sPath:lower():find(".love") then
-		
-		if not io.open(sPath..sDirectorySeparator.."lsqlite3."..sLibraryExtension) then
-		bIsArchived = true;
-		sSearchString = ".love";
-		end
-		
+	--check to see if the file exists
+	if hLibTest then
+	bLibExists = true;
+	hLibTest:close();
 	end
 	
-	local sTempPath = sPath;
-	sTempPath = sTempPath:lower():gsub("love.exe", "aaaa.aaa");
-	
-	if sTempPath:find(".exe") then	
-	bIsCompiled = true;
-	sSearchString = ".exe";
-	end
-
-	--copy the dll/so and adjust the path if the program is archived or compiled
-	if bIsArchived or bIsCompiled then
-	--correct the path
-	sPath = correctPath(sPath, sDirectorySeparator, sSearchString);
-	
+	if not bLibExists then
 	--load the appropriate library data
 	local sLibData = getLib(tSettings.SystemType, tSettings.SystemBits);
-		
+			
 		if sLibData then
 		--create the library		
-		local hLib = io.open(sPath..sDirectorySeparator.."lsqlite3."..sLibraryExtension, "wb");
+		local hLib = io.open(pLib, "wb");
 			
 			if hLib then
 			hLib:write(base64.decode(sLibData));
@@ -278,7 +258,7 @@ local sSearchString = "";
 		
 		end
 		
-	end	
+	end
 		
 	
 --add that path the package.cpath
