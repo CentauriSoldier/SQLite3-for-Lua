@@ -31,7 +31,13 @@ https://www.sqlite.org/
 
 ##Additional Contributors
 DLLs provided by josefnpat
+
 https://love2d.org/forums/viewtopic.php?f=5&t=38486&hilit=sqlite3
+
+
+All base64 code by Ernest R. Ewert
+
+https://github.com/ErnieE5/ee5_base64
 
 ##License
   The MIT License (MIT)
