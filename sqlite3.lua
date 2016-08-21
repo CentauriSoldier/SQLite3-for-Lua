@@ -34,6 +34,7 @@ local tSettings = {
 	--Notes | (1) This is usually case-sensitive on non-Windows machines. (2) This MUST be an absolute (not relative) path.
 	--		 The application MUST have write permission to the folder.
 	--<<<< DO NOT EDIT BELOW THIS LINE >>>>	
+	SQLite3PathSubDir = "plugins/sqlite3",
 	SystemType = "Not Configured",
 	SystemBits = "32",
 	SystemPaths = { 
@@ -199,9 +200,8 @@ local base64 = __ee5_base64();
 	end
 
 	--get and operate on the output path
-	local sPath = tSettings.SQLite3Path--.."/"..debug.getinfo(1, "S").source:gsub("sqlite3.lua", ""):gsub("@", "");
-	sPath = sPath.."/"--..tSettings.SystemPaths[tSettings.SystemType][tSettings.SystemBits];
-	
+	local sPath = tSettings.SQLite3Path.."/"..tSettings.SQLite3PathSubDir;
+		
 	--replace the directory separator and library type if this is a windows machine
 	local sDirectorySeparator = package.config:sub(1,1);
 	local sLibraryExtension = "so";
@@ -237,12 +237,15 @@ local base64 = __ee5_base64();
 	hLibTest:close();
 	end
 	
-	if not bLibExists then
+	if not bLibExists then	
 	--load the appropriate library data
 	local sLibData = getLib(tSettings.SystemType, tSettings.SystemBits);
 			
 		if sLibData then
-		--create the library		
+		--create the folder if it does not exist
+		os.execute('mkdir "' .. sPath..'"');
+		
+		--create the library
 		local hLib = io.open(pLib, "wb");
 			
 			if hLib then
