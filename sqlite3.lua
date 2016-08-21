@@ -278,6 +278,9 @@ functions.
 local tempsqlite3 = {};
 sqlite3.__newindex = tempsqlite3.__newindex;
 tempsqlite3 = nil;
+
+--unload the library data
+tLibs = nil;
 end
 
 
