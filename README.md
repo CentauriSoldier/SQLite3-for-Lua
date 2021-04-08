@@ -1,7 +1,7 @@
 # SQLite3 for Lua
 An SQLite3 Library for Lua
 
-##Installation and Setup
+## Installation and Setup
 - Download **sqlite3.lua**.
 
 - Copy the **sqlite3.lua** file to your project.
@@ -16,7 +16,7 @@ There are various ways to do this depending on what system is being used. For ex
 ```lua
 require('pathtoyourscripts.sqlite3');
 ```
-##Usage Example
+## Usage Example
 ```lua  
     --create/open database
     local hDB = sqlite3.open("mydatabase.db");
@@ -28,10 +28,10 @@ require('pathtoyourscripts.sqlite3');
       hDB:close();
       end
 ```
-##Documentation
+## Documentation
 https://www.sqlite.org/
 
-##Additional Contributors
+## Additional Contributors
 DLLs provided by josefnpat
 
 https://love2d.org/forums/viewtopic.php?f=5&t=38486&hilit=sqlite3
@@ -41,7 +41,7 @@ All base64 code by Ernest R. Ewert
 
 https://github.com/ErnieE5/ee5_base64
 
-##License
+## License
   The MIT License (MIT)
 
   Copyright (c) 2016 Centauri Soldier
