@@ -125,11 +125,12 @@ local function getOSInfo()
 	end
 
 	--test for mac
-	hCommand = io.popen("sw_vers -productVersion");
+	hCommand = io.popen("sw_vers -productName");
 	sCommand = hCommand:read("*a");
 		
 	if sCommand:lower():find("mac") then
 	tSettings.SystemType = "mac";
+    tSettings.SystemBits = "64";
 	return
 	end
 	
